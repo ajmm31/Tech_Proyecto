@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>ClaveTI Lite</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/templatemo.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+
+    <script src="database/datos.js"></script>
+    <script src="database/funciones.js"></script>
+
+</head>
+<body>
+    <!-- Encabezado de la pagina, incluye los enlaces de navegación -->
+    <div id="header"></div>
+
+    <!-- Inicio listado de servicios -->
+    <div class="container py-5"> <!-- container py-5 -->
+        <div class="row">
+            <div class="col-lg-2">
+                <h1 class="h2 pb-4">Categorias</h1>
+                <ul class="list-unstyled" id="categorias">
+                    <!-- Las categorias se llenarán dinámicamente con JavaScript -->
+                </ul>
+            </div>
+            
+            <script>
+              const categorias = obtenerCategorias();
+              const categoriasContainer = document.getElementById('categorias');
+              categorias.forEach(categoria => {
+                const li = document.createElement('li');
+                li.className = 'pb-3';
+                li.innerHTML = `<a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="servicios.html?categoria=${categoria.codigo}">${categoria.nombre}</a>`;
+                categoriasContainer.appendChild(li);
+
+              });
+            </script>
+
+            <div class="col-lg-7">
+                <div class="row" id="servicios">
+                </div>
+
+                <!-- Mostrar los servicios -->
+                <script>
+                  const queryString = window.location.search;
+                  const params = new URLSearchParams(queryString);
+                  const categoria = params.get("categoria");
+                  const servicios = obtenerServicios(categoria);
+                  const serviciosContainer = document.getElementById("servicios");
+                  servicios.forEach(servicio =>{
+                    const div = document.createElement('div');
+                    div.className = 'col-md-6';
+                    div.innerHTML = ` <div class="card mb-4 product-wap rounded-0">
+                                          <div class="card rounded-0">
+                                              <img class="card-img rounded-0 img-fluid" src="${servicio.imagen}">
+                                              <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                                                  <ul class="list-unstyled">
+                                                      <li><a class="btn btn-success text-white mt-2" href="detalles_servicio.html?codigoServicio=${servicio.codigo}"><i class="far fa-eye"></i></a></li>
+                                                      <li><a class="btn btn-success text-white mt-2 btn-add" href="#"><i class="fas fa-cart-plus"></i></a></li>
+                                                  </ul>
+                                              </div>
+                                          </div>
+                                          <div class="card-body">
+                                              <a href="shop-single.html" class="h3 text-decoration-none">${servicio.nombre}</a>
+                                              <p>${servicio.descripcion}</p>
+                                              <p class="text-center mb-0">${servicio.costo}</p>
+                                              <ul class="list-unstyled d-flex justify-content-center mb-1">
+                                                  <li>
+                                                      ${'<i class="text-warning fa fa-star"></i>'.repeat(servicio.estrellas)}
+                                                      ${'<i class="text-muted fa fa-star"></i>'.repeat(5- servicio.estrellas)}
+                                                  </li>
+                                              </ul>
+                                          </div>
+                                      </div>`;
+                    serviciosContainer.appendChild(div);
+                    div.querySelector(".btn-add").addEventListener('click', (e) => {
+                        e.preventDefault(); // Evita navegación si hay href
+                        agregarServicio(servicio);
+                        // Aquí puedes agregar lógica para agregar al carrito
+                    });
+
+                  });
+                </script>
+            </div>
+            
+            <!-- Inicio del carrito de compras -->
+            <div class="col-lg-3 bg-light p-5">
+                <h3 class="h3 pb-2">Carrito de Compras</h3>
+                <!-- Precio total -->
+                <p class="text-right pb-2">Total: $ <span id="total"></span></p>
+                <!-- Elementos del carrito -->
+                <ul id="carrito" class="list-group"></ul>
+
+                <!--  -->
+                <div id="boton-vaciar" class="btn btn-danger text-decoration-none" onclick="vaciarCarrito()">Vaciar</div>
+                <div class="btn btn-success text-decoration-none" id="boton-pagar">
+                    <a class="text-decoration-none btn-success text-white"  href="pago.html" target="target_blank">Pagar</a>
+                </div>
+            </div>
+            <script>
+                // Cargar el carrito de compras
+                mostrarCarrito();
+            </script>
+            <!-- Fin del carrito de compras -->
+             
+        </div>
+    </div>
+    <!-- End Content -->
+
+    <div id="footer"></div>
+        
+    <!-- Start Script -->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/templatemo.js"></script>
+    <script src="js/custom.js"></script>
+    <!-- End Script -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarFragmento("header", "header.html");
+            cargarFragmento("footer", "footer.html");
+        });
+    </script>
+    
+</body>
+</html>

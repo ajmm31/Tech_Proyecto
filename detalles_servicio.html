@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>ClaveTI Lite</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calve TI</title>
+    
+    <link rel="apple-touch-icon" href="img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/templatemo.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+
+    <script src="database/datos.js"></script>
+    <script src="database/funciones.js"></script>
+
+</head>
+<body>
+    <div id="header"></div>
+    
+    <!-- Open Content -->
+    <section class="bg-light">
+        <div class="container pb-5">
+            <div class="row">
+                <div class="col-lg-5 mt-5">
+                    <div class="card mb-3">
+                        <img class="card-img img-fluid" src="" alt="Card image cap" id="imagenServicio">
+                    </div>
+                </div>
+                <!-- col end -->
+                <div class="col-lg-7 mt-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <h1 class="h2" id="nombreServicio"></h1>
+                            <p class="h3 py-2" id="precioServicio"></p>
+                            <p class="py-2" id="clasificacionServicio">
+                            </p>
+
+                            <h6>Descripción:</h6>
+                            <p id="descripcionServicio"></p>
+
+                            <h6>Contenido:</h6>
+                            <ol class="list-ordered pb-3" id="contenidoServicio">
+                            </ol>
+
+                            <div class="row pb-3">
+                                <div class="col d-grid">
+                                    <a class="btn btn-success btn-lg" name="submit" href="#" id="botonAgregar" value="buy">Agregar</a>
+                                </div>
+                                <div class="col d-grid">
+                                    <a class="btn btn-success btn-lg" name="submit" value="addtocard" onclick="window.history.back()">Regresar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        // Obtener el código del servicio desde la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const codigoServicio = urlParams.get('codigoServicio');
+        
+        // Obtener del localStorage servicio por su código
+        const servicio = obtenerServicioPorCodigo(codigoServicio);
+
+        // Mostrar los datos del servicio en la pagina
+        if (servicio) {
+            document.getElementById('imagenServicio').src = servicio.imagen;
+            document.getElementById('nombreServicio').textContent = servicio.nombre;
+            document.getElementById('precioServicio').textContent = `${servicio.precio.toFixed(2)}`;
+            document.getElementById('descripcionServicio').textContent = servicio.descripcion;
+/*
+            const contenidoServiciosDiv = document.getElementById('contenidoServicio');
+            servicio.contenido.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                contenidoServiciosDiv.appendChild(li);
+            }); 
+*/
+            const estrellas = '<i class="text-warning fa fa-star"></i>' . repeat(servicio.estrellas) +
+                              '<i class="text-secondary fa fa-star"></i>' . repeat(5 - servicio.estrellas);
+            document.getElementById('clasificacionServicio').innerHTML = estrellas;
+
+            // Se asigna el manejador de eventos al botón "Agregar"
+            document.getElementById('botonAgregar').addEventListener('click', function() {
+                agregarServicio(servicio, false);
+                window.history.back();
+            });
+        }
+        </script>
+    <!-- Close Content -->
+
+
+    <div id="footer"></div>
+    
+    <!-- Start Script -->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/templatemo.js"></script>
+    <script src="js/custom.js"></script>
+    <!-- End Script -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarFragmento("header", "header.html");
+            cargarFragmento("footer", "footer.html");
+        });
+    </script>
+
+</body>
+</html>
